@@ -55,4 +55,4 @@ results = collection.query(
 
 # Print the results
 for result in results['documents'][0]:
-    print("Relevant text:", result)
+    print("Relevant text:", result)    #user query one by one
