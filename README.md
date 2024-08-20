@@ -140,10 +140,6 @@ The Home Improvement Assistant is a Flask-based web application designed to assi
 - `ask()`: Handles user queries and image uploads.
 - `uploaded_file(filename)`: Serves uploaded files.
 
-## Contributing
-
-Feel free to open issues or submit pull requests to contribute to this project. Please ensure your changes are well-documented and tested.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
@@ -153,6 +149,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **OpenAI** for providing GPT-4
 - **Hugging Face** for the CLIP model
 - **PyMuPDF**, **SentenceTransformers**, and other libraries used in this project
-```
-
-You can replace the placeholders for demonstration videos and photos with actual URLs or file paths once you have them. Additionally, you can update the repository URL and other specific details to match your project's requirements.
