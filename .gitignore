@@ -1,0 +1,3 @@
+test_env/
+git add .gitignore
+git commit -m "Ignore test_env folder and remove it from tracking"
