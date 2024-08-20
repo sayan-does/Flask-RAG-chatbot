@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Fixer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #343541;
+            color: #ececf1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #title-container {
+            background-color: #202123;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #title {
+            margin: 0;
+            font-size: 2em;
+            font-weight: bold;
+            color: #10a37f;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        #chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .message {
+            max-width: 80%;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #5c5c72;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .assistant-message {
+            background-color: #444654;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        #input-container {
+            display: flex;
+            padding: 20px;
+            background-color: #40414f;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #40414f;
+            color: #ececf1;
+        }
+        #send-button, #upload-button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #5c5c72;
+            color: #ececf1;
+            cursor: pointer;
+        }
+        #image-input {
+            display: none;
+        }
+        .chat-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .typing-indicator {
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .typing-indicator span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1s infinite;
+        }
+        .typing-indicator span:nth-child(1) {
+            background-color: #ff4136;
+            animation-delay: 0s;
+        }
+        .typing-indicator span:nth-child(2) {
+            background-color: #ff851b;
+            animation-delay: 0.1s;
+        }
+        .typing-indicator span:nth-child(3) {
+            background-color: #ffdc00;
+            animation-delay: 0.2s;
+        }
+        .typing-indicator span:nth-child(4) {
+            background-color: #2ecc40;
+            animation-delay: 0.3s;
+        }
+        .typing-indicator span:nth-child(5) {
+            background-color: #0074d9;
+            animation-delay: 0.4s;
+        }
+        @keyframes typing {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.5) rotate(180deg); }
+            100% { transform: scale(1) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="title-container">
+        <h1 id="title">Home Fixer</h1>
+    </div>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button id="send-button">Send</button>
+        <label for="image-input" id="upload-button">Upload Image</label>
+        <input type="file" id="image-input" accept="image/*">
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function addMessage(content, isUser, imagePath) {
+                const messageDiv = $('<div>').addClass('message').addClass(isUser ? 'user-message' : 'assistant-message');
+                messageDiv.text(content);
+                if (imagePath) {
+                    const img = $('<img>').addClass('chat-image').attr('src', imagePath);
+                    messageDiv.append(img);
+                }
+                $('#chat-container').append(messageDiv);
+                $('#chat-container').scrollTop($('#chat-container')[0].scrollHeight);
+                return messageDiv;
+            }
+
+            function addTypingIndicator() {
+                const indicator = $('<div>').addClass('typing-indicator');
+                for (let i = 0; i < 5; i++) {
+                    indicator.append($('<span>'));
+                }
+                return addMessage('', false).append(indicator);
+            }
+
+            function sendMessage() {
+                const query = $('#user-input').val().trim();
+                if (query) {
+                    addMessage(query, true);
+                    $('#user-input').val('');
+
+                    const formData = new FormData();
+                    formData.append('query', query);
+
+                    const imageInput = $('#image-input')[0];
+                    if (imageInput.files.length > 0) {
+                        formData.append('image', imageInput.files[0]);
+                    }
+
+                    const typingIndicator = addTypingIndicator();
+
+                    $.ajax({
+                        url: '/ask',
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            typingIndicator.remove();
+                            addMessage(response.answer, false, response.image_path);
+                            $('#image-input').val('');
+                            $('#upload-button').text('Upload Image');
+                        }
+                    });
+                }
+            }
+
+            $('#send-button').click(sendMessage);
+
+            $('#user-input').keypress(function(e) {
+                if (e.which == 13) {
+                    sendMessage();
+                    return false;
+                }
+            });
+
+            $('#image-input').change(function() {
+                const fileName = $(this).val().split('\\').pop();
+                $('#upload-button').text(fileName || 'Upload Image');
+            });
+        });
+    </script>
+</body>
+</html>
