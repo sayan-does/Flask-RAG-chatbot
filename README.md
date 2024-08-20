@@ -106,16 +106,13 @@ The Home Improvement Assistant is a Flask-based web application designed to assi
 ### Videos
 
 <!-- Add demonstration video links here -->
-- [Video 1: Overview of the Home Improvement Assistant](#)
-- [Video 2: How to Upload PDFs and Extract Text](#)
-- [Video 3: Asking Questions and Receiving Answers](#)
+- [Video 1: Overview of the Home Improvement Assistant](content/demo1.mp4)
 
 ### Photos
 
 <!-- Add demonstration photos here -->
-![Screenshot 1: Web Interface](#)
-![Screenshot 2: PDF Text Extraction](#)
-![Screenshot 3: Image Classification](#)
+![Screenshot 1: Web Interface](content/screenshot.png)
+
 
 ## Code Explanation
 
