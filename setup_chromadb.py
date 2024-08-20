@@ -5,6 +5,7 @@ from sentence_transformers import SentenceTransformer
 # Initialize the ChromaDB client with the correct settings
 client = chromadb.Client(Settings(
     chroma_db_impl="duckdb+parquet",  # Use the correct Chroma DB implementation
+    #tried an earlier version but that was deprecated
     persist_directory="./chromadb_data"  # Directory to store the ChromaDB data
 ))
 
