@@ -1,4 +1,3 @@
-```
 # Home Improvement Assistant
 
 ## Overview
